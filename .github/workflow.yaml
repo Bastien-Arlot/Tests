@@ -34,6 +34,6 @@ jobs:
       - name: Add to Kanban board
         uses: alex-page/github-project-automation-plus@v0.8.1
         with:
-          project: 'Name or Number of Your Project'
-          column: 'Name of the Column'
+          project: '@Bastien-Arlot's untitled project'
+          column: 'In Progress'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
