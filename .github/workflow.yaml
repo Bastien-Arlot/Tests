@@ -1,0 +1,39 @@
+yaml
+name: Automate Kanban tasks
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  assign_and_track:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Assign author
+        uses: octokit/graphql-action@1.x
+        with:
+          query: |
+            mutation($issueId: ID!, $userId: ID!) {
+              updateIssue(input: {id: $issueId, assigneeIds: [$userId]}) {
+                issue {
+                  title
+                }
+              }
+            }
+          variables: |
+            {
+              "issueId": "${{ github.event.issue.node_id }}",
+              "userId": "${{ github.event.issue.user.node_id }}"
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add to Kanban board
+        uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: 'Name or Number of Your Project'
+          column: 'Name of the Column'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
